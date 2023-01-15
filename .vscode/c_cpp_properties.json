@@ -1,0 +1,22 @@
+{
+	"configurations": [
+		{
+			"name": "Daisy",
+			"includePath": [
+				"${workspaceFolder}/DaisySP",
+				"${workspaceFolder}/DaisySP/tests/util",
+				"${workspaceFolder}/DaisySP/Source",
+				"${workspaceFolder}/DaisySP/tests/util"
+			],
+			"macFrameworkPath": ["/System/Library/Frameworks", "/Library/Frameworks"],
+			"intelliSenseMode": "macos-clang-x64",
+			"compilerPath": "/usr/bin/clang",
+			"cStandard": "c17",
+			"cppStandard": "c++17",
+			"browse": {
+				"path": ["./source", "./DaisySP/Source"]
+			}
+		}
+	],
+	"version": 4
+}

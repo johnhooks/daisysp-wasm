@@ -1,0 +1,25 @@
+{
+	"name": "daisysp-wasm-example",
+	"version": "0.1.0",
+	"private": true,
+	"description": "An example of building a WASM Web Audio Worket using DaisySP",
+	"author": "John Hooks <bitmachina@outlook.com> (https://johnhooks.io)",
+	"license": "MIT",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/johnhooks/daisysp-wasm-example.git"
+	},
+	"bugs": {
+		"url": "https://github.com/johnhooks/daisysp-wasm-example/issues"
+	},
+	"homepage": "https://github.com/johnhooks/daisysp-wasm-example#readme",
+	"scripts": {
+		"website:dev": "vite",
+		"website:build": "vite build",
+		"website:preview": "vite preview"
+	},
+	"devDependencies": {
+		"prettier": "2.8.3",
+		"vite": "4.0.4"
+	}
+}

@@ -14,7 +14,7 @@
 			"cStandard": "c17",
 			"cppStandard": "c++17",
 			"browse": {
-				"path": ["./source", "./DaisySP/Source"]
+				"path": ["./worklet", "./DaisySP/Source"]
 			}
 		}
 	],

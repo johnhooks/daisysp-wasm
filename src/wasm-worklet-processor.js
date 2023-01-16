@@ -8,27 +8,33 @@ import { RENDER_QUANTUM_FRAMES, MAX_CHANNEL_COUNT, HeapAudioBuffer } from "./was
  * @extends AudioWorkletProcessor
  */
 class WASMWorkletProcessor extends AudioWorkletProcessor {
+  _initialized = false;
+  _processor = null;
+
 	/**
 	 * @constructor
 	 */
 	constructor() {
 		super();
 
-		// Allocate the buffer for the heap access. Start with stereo, but it can
-		// be expanded up to 32 channels.
-		this._heapInputBuffer = new HeapAudioBuffer(
-			Module,
-			RENDER_QUANTUM_FRAMES,
-			2,
-			MAX_CHANNEL_COUNT
-		);
-		this._heapOutputBuffer = new HeapAudioBuffer(
-			Module,
-			RENDER_QUANTUM_FRAMES,
-			2,
-			MAX_CHANNEL_COUNT
-		);
-		this._kernel = new Module.AudioProcessor(48000);
+    Module().then(mod => {
+      // Allocate the buffer for the heap access. Start with stereo, but it can
+		  // be expanded up to 32 channels.
+      this._heapInputBuffer = new HeapAudioBuffer(
+        mod,
+        RENDER_QUANTUM_FRAMES,
+        2,
+        MAX_CHANNEL_COUNT
+      );
+      this._heapOutputBuffer = new HeapAudioBuffer(
+        mod,
+        RENDER_QUANTUM_FRAMES,
+        2,
+        MAX_CHANNEL_COUNT
+      );
+      this._processor = new mod.AudioProcessor(48000);
+      this._initialized = true;
+    }).catch(error => { throw error })
 	}
 
 	/**
@@ -39,6 +45,9 @@ class WASMWorkletProcessor extends AudioWorkletProcessor {
 	 * @return {Boolean} Active source flag.
 	 */
 	process(inputs, outputs, parameters) {
+    // @todo remove hack
+    if (!this._initialized) return true;
+
 		// Use the 1st input and output only to make the example simpler. |input|
 		// and |output| here have the similar structure with the AudioBuffer
 		// interface. (i.e. An array of Float32Array)
@@ -58,7 +67,7 @@ class WASMWorkletProcessor extends AudioWorkletProcessor {
 		for (let channel = 0; channel < channelCount; ++channel) {
 			this._heapInputBuffer.getChannelData(channel).set(input[channel]);
 		}
-		this._kernel.process(
+		this._processor.process(
 			this._heapInputBuffer.getHeapAddress(),
 			this._heapOutputBuffer.getHeapAddress(),
 			channelCount

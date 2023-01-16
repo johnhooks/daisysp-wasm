@@ -6,6 +6,18 @@
   #include "daisysp.h"
   ```
 
+## Emscripten configuration
+
+This compile flag needs to be set `-s ASSERTIONS=0`, otherwise the checks to verify the runtime environment fail. It doesn't recognize an audio worklet environment.
+
+- `EXPORT_ES6` - wraps the wasm module an async iife and exports it as default. So it has to be called and awaited. It seems to be a method of allowing configuration of the module, an config object can passed as an argument and it is used as the base object of the module.
+
+**flags to research**
+
+I haven't found good documentation for the `emcc` compile options, but searching through [emcc.py](https://github.com/emscripten-core/emscripten/blob/fa1abe47957df0dc336b597c2543006e3e647a64/emcc.py) seems to uncover them.
+
+- `MODULARIZE`
+
 ## `allow_raw_pointers`
 
 In the Google examples they don't pass `allow_raw_pointers` as the third argument to the base class binding, but it won't compile for me unless I do.

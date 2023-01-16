@@ -14,12 +14,17 @@
 	},
 	"homepage": "https://github.com/johnhooks/daisysp-wasm-example#readme",
 	"scripts": {
-		"website:dev": "vite",
-		"website:build": "vite build",
-		"website:preview": "vite preview"
+		"build": "scripts/build.sh",
+    "build:rollup": "rollup -c && cp dist/wasm-worklet-processor.js example/public",
+		"website:dev": "yarn --cwd example dev",
+		"website:build": "yarn --cwd example dev",
+		"website:preview": "yarn --cwd example dev"
 	},
 	"devDependencies": {
+		"@rollup/plugin-node-resolve": "^15.0.1",
 		"prettier": "2.8.3",
+		"rollup": "3.10.0",
 		"vite": "4.0.4"
-	}
+	},
+	"type": "module"
 }

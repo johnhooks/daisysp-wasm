@@ -21,9 +21,9 @@ class DemoApp {
 	}
 
 	async initializeAudio() {
-		if (this._initialized) return;
+		// if (this._initialized) return;
 		this._context = new AudioContext();
-		await this._context.audioWorklet.addModule("worklets/wasm-worklet-processor.js");
+		await this._context.audioWorklet.addModule("wasm-worklet-processor.js");
 		this._audioNode = new AudioWorkletNode(this._context, "wasm-worklet-processor");
 
 		const oscillator = new OscillatorNode(this._context);

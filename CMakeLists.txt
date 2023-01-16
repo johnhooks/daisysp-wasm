@@ -15,10 +15,8 @@ cmake_minimum_required(VERSION 3.15)
 # directories, and the current project version. This is a standard CMake command.
 project(AUDIO_PROCESSOR VERSION 0.0.1)
 
-set(CMAKE_SOURCE_DIR worklet)
-set(CMAKE_BINARY_DIR worklet)
 set(CMAKE_VERBOSE_MAKEFILE on)
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/public/worklets)
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/build/wasm)
 
 add_subdirectory(DaisySP)
 
@@ -49,4 +47,12 @@ add_definitions("--std=c++17")
 
 set_target_properties(AudioProcessor
     PROPERTIES
-    LINK_FLAGS "--bind -s SINGLE_FILE=1 -s WASM=1 -s BINARYEN_ASYNC_COMPILATION=0 -s ASSERTIONS=0 -O0 --post-js ./lib/em-es6-module.js")
+    LINK_FLAGS "--bind\
+    -s SINGLE_FILE=1\
+    -s WASM=1\
+    -s NO_FILESYSTEM=1\
+    -s BINARYEN_ASYNC_COMPILATION=0\
+    -s ASSERTIONS=0\
+    -s EXPORT_ES6=1\
+    -s MODULARIZE=1\
+    -O0 ")

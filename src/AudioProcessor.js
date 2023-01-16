@@ -1,4 +1,12 @@
 
+var Module = (() => {
+  var _scriptDir = import.meta.url;
+  
+  return (
+async function(config) {
+  var Module = config || {};
+
+
 
 // The Module object: Our interface to the outside world. We import
 // and export values on it. There are various ways Module can be used:
@@ -19,9 +27,16 @@ var Module = typeof Module != 'undefined' ? Module : {};
 
 // See https://caniuse.com/mdn-javascript_builtins_bigint64array
 
+// Set up the promise that indicates the Module is initialized
+var readyPromiseResolve, readyPromiseReject;
+Module['ready'] = new Promise(function(resolve, reject) {
+  readyPromiseResolve = resolve;
+  readyPromiseReject = reject;
+});
+
 // --pre-jses are emitted after the Module integration code, so that they can
 // refer to Module (if they choose; they can also define Module)
-
+// {{PRE_JSES}}
 
 // Sometimes an existing Module object exists with properties
 // meant to overwrite the default module functionality. Here
@@ -80,6 +95,9 @@ if (ENVIRONMENT_IS_NODE) {
   // the require()` function.  This is only necessary for multi-environment
   // builds, `-sENVIRONMENT=node` emits a static import declaration instead.
   // TODO: Swap all `require()`'s with `import()`'s?
+  const { createRequire } = await import('module');
+  /** @suppress{duplicate} */
+  var require = createRequire(import.meta.url);
   // These modules will usually be used on Node.js. Load them eagerly to avoid
   // the complexity of lazy-loading.
   var fs = require('fs');
@@ -88,7 +106,10 @@ if (ENVIRONMENT_IS_NODE) {
   if (ENVIRONMENT_IS_WORKER) {
     scriptDirectory = nodePath.dirname(scriptDirectory) + '/';
   } else {
-    scriptDirectory = __dirname + '/';
+    // EXPORT_ES6 + ENVIRONMENT_IS_NODE always requires use of import.meta.url,
+    // since there's no way getting the current absolute path of the module when
+    // support for that is not available.
+    scriptDirectory = require('url').fileURLToPath(new URL('./', import.meta.url)); // includes trailing slash
   }
 
 // include: node_shell_read.js
@@ -133,9 +154,7 @@ readAsync = (filename, onload, onerror) => {
 
   arguments_ = process['argv'].slice(2);
 
-  if (typeof module != 'undefined') {
-    module['exports'] = Module;
-  }
+  // MODULARIZE will export the module in the proper place outside, we don't need to export here
 
   process['on']('uncaughtException', function(ex) {
     // suppress ExitStatus exceptions from showing an error
@@ -172,6 +191,11 @@ if (ENVIRONMENT_IS_WEB || ENVIRONMENT_IS_WORKER) {
     scriptDirectory = self.location.href;
   } else if (typeof document != 'undefined' && document.currentScript) { // web
     scriptDirectory = document.currentScript.src;
+  }
+  // When MODULARIZE, this JS may be executed later, after document.currentScript
+  // is gone, so we saved it, and we use it here instead of any other info.
+  if (_scriptDir) {
+    scriptDirectory = _scriptDir;
   }
   // blob urls look like blob:http://site.com/etc/etc and we cannot infer anything from them.
   // otherwise, slice off the final part of the url to find the script directory.
@@ -739,6 +763,7 @@ function abort(what) {
   /** @suppress {checkTypes} */
   var e = new WebAssembly.RuntimeError(what);
 
+  readyPromiseReject(e);
   // Throw the error whether or not MODULARIZE is set because abort is used
   // in code paths apart from instantiation where an exception is expected
   // to be thrown when abort is called.
@@ -889,7 +914,8 @@ function createWasm() {
       return exports;
     } catch(e) {
       err('Module.instantiateWasm callback failed with error: ' + e);
-        return false;
+        // If instantiation fails, reject the module ready promise.
+        readyPromiseReject(e);
     }
   }
 
@@ -2966,6 +2992,7 @@ function run(args) {
 
     initRuntime();
 
+    readyPromiseResolve(Module);
     if (Module['onRuntimeInitialized']) Module['onRuntimeInitialized']();
 
     postRun();
@@ -2996,9 +3023,10 @@ run();
 
 
 
-/* global Module */
 
-// EXPORT_ES6 option does not work as described at
-// https://github.com/kripken/emscripten/issues/6284, so we have to
-// manually add this by '--post-js' setting when the Emscripten compilation.
+
+  return Module
+}
+);
+})();
 export default Module;

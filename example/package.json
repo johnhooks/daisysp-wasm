@@ -1,0 +1,10 @@
+{
+	"name": "daisysp-wasm-example-website",
+	"version": "0.1.0",
+	"private": true,
+	"scripts": {
+		"dev": "vite",
+		"build": "vite build",
+		"preview": "vite preview"
+	}
+}

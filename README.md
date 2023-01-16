@@ -49,15 +49,15 @@ let audioNode = new AudioWorkletNode(context, "wasm-worklet-processor");
 
 ## Inputs and Outputs
 
-### Ways to use inputs and outputs from JS audio worklet in C++
+### How to access the inputs and outputs from JS audio worklet in C++
 
 Google in their [example](https://github.com/GoogleChromeLabs/web-audio-samples/blob/eed2a8613af551f2b1d166a01c834e8431fdf3c6/src/audio-worklet/design-pattern/wasm/SimpleKernel.cc)
-use raw pointers to memory allocated in the WASM heap, but first the inputs and outputs are transformed. The WASM heap is an `Uint16Array` and the [wasm-audio-helper.js](https://github.com/johnhooks/web-audio-samples/blob/eed2a8613af551f2b1d166a01c834e8431fdf3c6/src/audio-worklet/design-pattern/lib/wasm-audio-helper.js) preforms some magic to convert the arrays of inputs and outputs of the `AudioWorkletProcessor#process` method each to a single array of `Float32Array`, chaining the channels one after the other.
+use raw pointers to memory allocated in the WASM heap, but first the inputs and outputs are transformed. The WASM heap is an `Uint16Array` and the [wasm-audio-helper.js](https://github.com/johnhooks/web-audio-samples/blob/eed2a8613af551f2b1d166a01c834e8431fdf3c6/src/audio-worklet/design-pattern/lib/wasm-audio-helper.js) preforms some magic to convert each of the arrays of `inputs` and `outputs` arguments of the `AudioWorkletProcessor#process` method to a single array of `Float32Array`, chaining the channels one after the other.
 
-In the Emscripten binding, raw pointers are cast to `float*` to access the input/output data on WASM heap in the C++ code. There is a warning about using [raw pointers](https://emscripten.org/docs/porting/connecting_cpp_and_javascript/embind.html#raw-pointers) somewhere in the documentation, I am having some trouble finding it, but the gist was that there isn't any guarantee on the lifetime of a raw pointer. Though since its being using in the `process` method of the audio processor and not used after leaving the callback's scope, I hope it's reasonably safe.
+In the Emscripten binding, raw pointers are cast to `float*` to access the `input`/`output` data on WASM heap in the C++ code. There is a warning about using [raw pointers](https://emscripten.org/docs/porting/connecting_cpp_and_javascript/embind.html#raw-pointers) somewhere in the documentation, I am having some trouble finding it, but the gist was that there isn't any guarantee on the lifetime of a raw pointer. Though since its being using in the `process` method of the audio processor and not used after leaving the callback's scope, I hope it's reasonably safe.
 
 ```cpp
- void Process(uintptr_t input_ptr, uintptr_t output_ptr, unsigned channel_count) {
+ void process(uintptr_t input_ptr, uintptr_t output_ptr, unsigned channel_count) {
     float* input_buffer = reinterpret_cast<float*>(input_ptr);
     float* output_buffer = reinterpret_cast<float*>(output_ptr);
 }
@@ -67,7 +67,7 @@ In the Emscripten binding, raw pointers are cast to `float*` to access the input
 
 ## Things to research
 
-I am a total novice in both C++ and WASM, I have a lot to learn.
+I am a total novice of both C++ and WASM, I have a lot to learn.
 
 - I think DaisySP expects the sample to be interwoven and the Web Audio API uses a planar buffer format.
 - Need to be flexible on the number of frames per call to render. Googles examples expect it to be 128, though MDN warns that it could change in the future to be variable.

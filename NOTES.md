@@ -37,7 +37,9 @@ EMSCRIPTEN_BINDINGS(CLASS_Synthesizer) {
 }
 ```
 
-It was because I double binding the `precess` method.
+It was because I double binding the `process` method.
+
+EDIT: This didn't work, if the `AudioProcessorBase` wasn't bound there was a build error.
 
 ```cpp
 EMSCRIPTEN_BINDINGS(CLASS_AudioProcessor)

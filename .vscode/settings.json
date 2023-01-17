@@ -30,5 +30,19 @@
 	},
 	"typescript.autoClosingTags": false,
 	"typescript.suggest.completeJSDocs": false,
-	"typescript.disableAutomaticTypeAcquisition": true
+	"typescript.disableAutomaticTypeAcquisition": true,
+	"cSpell.words": [
+		"audioworklet",
+		"emscripten"
+	],
+	"cSpell.ignorePaths": [
+		"**/package-lock.json",
+		"**/build/**",
+		"**/dist/**",
+		"**/node_modules/**",
+		"**/vscode-extension/**",
+		"**/.git/objects/**",
+		"./vscode/**"
+	],
+	"typescript.tsdk": "node_modules/typescript/lib"
 }

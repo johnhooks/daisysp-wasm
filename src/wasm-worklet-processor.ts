@@ -2,9 +2,9 @@ import type { Message } from "./types.js";
 import { createWasmBinding, type WasmBinding } from "./wasm-binding.js";
 
 /**
- * A simple demonstration of WASM-powered AudioWorkletProcessor.
+ * A demonstration of a WASM-powered AudioWorkletProcessor using DaisySP.
  *
- * @class WASMWorkletProcessor
+ * @class WasmWorkletProcessor
  * @extends AudioWorkletProcessor
  */
 class WasmWorkletProcessor extends AudioWorkletProcessor {

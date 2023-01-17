@@ -1,5 +1,5 @@
 {
-	"name": "daisysp-wasm-example",
+	"name": "daisysp-wasm",
 	"version": "0.1.0",
 	"private": true,
 	"description": "An example of building a WASM Web Audio Worket using DaisySP",
@@ -7,12 +7,12 @@
 	"license": "MIT",
 	"repository": {
 		"type": "git",
-		"url": "git+https://github.com/johnhooks/daisysp-wasm-example.git"
+		"url": "git+https://github.com/johnhooks/daisysp-wasm.git"
 	},
 	"bugs": {
-		"url": "https://github.com/johnhooks/daisysp-wasm-example/issues"
+		"url": "https://github.com/johnhooks/daisysp-wasm/issues"
 	},
-	"homepage": "https://github.com/johnhooks/daisysp-wasm-example#readme",
+	"homepage": "https://github.com/johnhooks/daisysp-wasm#readme",
 	"scripts": {
 		"build": "scripts/build.sh",
 		"build:rollup": "rollup -c && cp dist/wasm-worklet-processor.js example/public",
@@ -29,8 +29,7 @@
 		"prettier": "2.8.3",
 		"rollup": "3.10.0",
 		"tslib": "2.4.1",
-		"typescript": "4.9.4",
-		"vite": "4.0.4"
+		"typescript": "4.9.4"
 	},
 	"type": "module"
 }

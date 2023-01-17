@@ -57,6 +57,11 @@ class Demo extends HTMLElement {
         color: var(--dark-blue);
         background-color: var(--dark-violet);
       }
+
+			button.active {
+				color: var(--dark-blue);
+        background-color: var(--dark-violet);
+			}
     `;
 
 		// Create text node and add word count to it
@@ -90,20 +95,17 @@ class Demo extends HTMLElement {
 		if (this.toggleState) {
 			this.context?.resume();
 			this.toneButton.disabled = false;
-			this.toggleButton.classList.replace("inactive", "active");
+			this.toggleButton.classList.add("active");
 		} else {
 			this.context?.suspend();
 			this.toneButton.disabled = true;
-			this.toggleButton.classList.replace("active", "inactive");
+			this.toggleButton.classList.remove("active");
 		}
 	}
 
 	private handleToneButton(isDown: boolean) {
 		if (isDown) {
 			this.audioNode?.port.postMessage({ type: "trigger", note: 70 });
-			this.toneButton?.classList.replace("inactive", "active");
-		} else {
-			this.toneButton?.classList.replace("active", "inactive");
 		}
 	}
 

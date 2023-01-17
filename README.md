@@ -4,6 +4,10 @@
 
 Create a Web Audio Worklet that uses [DaisySP](https://github.com/electro-smith/DaisySP) for signal processing.
 
+## Example website
+
+Checkout a functional [example](https://johnhooks.io/daisysp-wasm) using `daisysp::Oscillator`.
+
 ## Building the project
 
 1. Install [Emscripten](https://emscripten.org/docs/getting_started/downloads.html#installation-instructions-using-the-emsdk-recommended)

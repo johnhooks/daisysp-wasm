@@ -1,0 +1,26 @@
+name: Build package
+
+on: workflow_call
+
+jobs:
+  build-pkg:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js and Yarn
+        uses: ./.github/actions/node
+
+      # Not currently attempting to build WASM modules on CI
+
+      - name: Build package
+        shell: bash
+        run: yarn build:rollup
+
+      - name: Archive build artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: pkg-build-${{ github.run_id }}
+          path: |
+            example/public

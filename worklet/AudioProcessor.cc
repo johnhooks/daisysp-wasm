@@ -2,95 +2,60 @@
 
 using namespace daisysp;
 
-// void AudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
-// void AudioProcessor::prepareToPlay(double sampleRate)
-// {
-// 	osc.Init(sampleRate);
-// 	noteMidi = 0.0f;
-// 	noteVal = 0.f;
-// 	ratio = 2.f;
-// 	index = 0.1f;
-// }
+// Example similar to the DaisySeed Osc Example.
+// https://github.com/electro-smith/DaisyExamples/blob/d15ccc69b689a76b220aed8113615e9c77eb1b39/seed/Osc/Osc.cpp
 
+/**
+ * @brief Construct a new Audio Processor:: Audio Processor object
+ *
+ * @param sample_rate - The sample rate of the JavaScript AudioContext
+ */
 AudioProcessor::AudioProcessor(float sample_rate)
 {
 	assert(sample_rate > 0);
+
+	// Setup the oscillator
+	osc.Init(sample_rate); // int32_t cast to float done in the emscripten wrapper class
 	osc.SetWaveform(Oscillator::WAVE_SQUARE);
-	// int32_t cast to float done in the emscripten wrapper class
-	osc.Init(sample_rate);
+	osc.SetAmp(1.f);
+	osc.SetFreq(mtof(60));
+
+	// Setup the volume envelope
+	env.Init(sample_rate);
+	// Envelope attack and decay times
+	env.SetTime(ADENV_SEG_ATTACK, .01);
+	env.SetTime(ADENV_SEG_DECAY, .4);
+	// minimum and maximum envelope values
+	env.SetMin(0.0);
+	env.SetMax(1.f);
+	env.SetCurve(0); // linear
 }
 
-void AudioProcessor::process(float *input, float *output, unsigned channel_count)
+/**
+ * @brief Render a series of AudioBuffer frames.
+ *
+ * @param output - The pointer to the AudioWorkletProcessor output Float32Array on the WASM heap.
+ * @param num_frames - The number for frames to render. AudioContext default is 128.
+ */
+void AudioProcessor::render(float *output, int32_t num_frames)
 {
-	// Bypasses the data. By design, the channel count will always be the same
-	// for |input_buffer| and |output_buffer|.
-	for (unsigned channel = 0; channel < channel_count; ++channel)
+	float osc_out, env_out;
+
+	for (size_t i = 0; i < num_frames; i++)
 	{
-		float *destination = output + channel * kRenderQuantumFrames;
-		float *source = input + channel * kRenderQuantumFrames;
-		memcpy(destination, source, kBytesPerChannel);
+		// Get the next envelope value
+		env_out = env.Process();
+		// Set the oscillator volume to the latest env value
+		osc.SetAmp(env_out);
+		// Get the next oscillator sample
+		osc_out = osc.Process();
+		// Set mono output
+		*output++ = osc_out;
 	}
 }
-// void AudioProcessor::processBlock(juce::AudioBuffer<float> &buffer,
-// 																	juce::MidiBuffer &midiMessages)
-// {
-// 	juce::ignoreUnused(midiMessages);
 
-// 	juce::ScopedNoDenormals noDenormals;
-// 	auto totalNumInputChannels = getTotalNumInputChannels();
-// 	auto totalNumOutputChannels = getTotalNumOutputChannels();
-
-// 	// In case we have more outputs than inputs, this code clears any output
-// 	// channels that didn't contain input data, (because these aren't
-// 	// guaranteed to be empty - they may contain garbage).
-// 	// This is here to avoid people getting screaming feedback
-// 	// when they first compile a plugin, but obviously you don't need to keep
-// 	// this code if your algorithm always overwrites all the output channels.
-// 	for (auto i = totalNumInputChannels; i < totalNumOutputChannels; ++i)
-// 		buffer.clear(i, 0, buffer.getNumSamples());
-
-// 	// Handle some MIDI
-// 	int time;
-// 	juce::MidiMessage m;
-// 	for (juce::MidiBuffer::Iterator i(midiMessages); i.getNextEvent(m, time);)
-// 	{
-// 		if (m.isNoteOn())
-// 		{
-// 			noteMidi = m.getNoteNumber();
-// 		}
-// 		else if (m.isController())
-// 		{
-// 			switch (m.getControllerNumber())
-// 			{
-// 			case 1:
-// 				index = (m.getControllerValue() / 127.f);
-// 				break;
-// 			case 2:
-// 			case 91: // 91 is the first CC knob on the old oxygen8 v2 I have sitting here...
-// 				ratio = 1.f + ((m.getControllerValue() / 127.f) * 11.f);
-// 				break;
-// 			default:
-// 				break;
-// 			}
-// 		}
-// 	}
-
-// 	float note = daisysp::fclamp(noteMidi + noteVal, 0.0, 127.0);
-// 	osc.SetIndex(index);
-// 	osc.SetRatio(ratio);
-// 	// Process loop
-// 	for (int channel = 0; channel < totalNumInputChannels; ++channel)
-// 	{
-// 		auto *channelData = buffer.getWritePointer(channel);
-// 		juce::ignoreUnused(channelData);
-// 		// ..do something to the data...
-// 		osc.SetFrequency(daisysp::mtof(note));
-// 		if (channel == 0)
-// 		{
-// 			for (size_t i = 0; i < buffer.getNumSamples(); i++)
-// 			{
-// 				channelData[i] = osc.Process();
-// 			}
-// 		}
-// 	}
-// }
+void AudioProcessor::triggerAttackRelease(uint8_t note)
+{
+	// Trigger the envelope!
+	env.Trigger();
+}

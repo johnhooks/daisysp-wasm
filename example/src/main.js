@@ -21,29 +21,24 @@ class DemoApp {
 	}
 
 	async initializeAudio() {
-		// if (this._initialized) return;
-		this._context = new AudioContext();
+		this._context = new AudioContext({sampleRate: 48_000});
 		await this._context.audioWorklet.addModule("wasm-worklet-processor.js");
 		this._audioNode = new AudioWorkletNode(this._context, "wasm-worklet-processor");
-
-		const oscillator = new OscillatorNode(this._context);
-
 		this._volumeNode = new GainNode(this._context, { gain: 0.25 });
-		oscillator
-			.connect(this._audioNode)
+
+			this._audioNode
 			.connect(this._volumeNode)
 			.connect(this._context.destination);
-
-		oscillator.start();
-
-		if (!this._toggleState) this._context.suspend();
 	}
 
 	async _handleToggle() {
+		if (!this._initialized) await this.initializeAudio()
+		// Take the logic from the initializeAudio and put it here.
+		// On toggle trigger attack release with message like { type: "trigger", note: 80} using MIDI note values.
 		this._toggleState = !this._toggleState;
 		if (this._toggleState) {
-			await demoApp.initializeAudio();
 			this._context.resume();
+
 			this._toggleButton.classList.replace("inactive", "active");
 		} else {
 			this._context.suspend();
@@ -52,8 +47,8 @@ class DemoApp {
 	}
 
 	_handleToneButton(isDown) {
-		this._audioNode.port.postMessage(isDown);
 		if (isDown) {
+			this._audioNode.port.postMessage({type: "trigger", note: 70});
 			this._toneButton.classList.replace("inactive", "active");
 		} else {
 			this._toneButton.classList.replace("active", "inactive");

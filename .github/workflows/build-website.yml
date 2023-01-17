@@ -21,6 +21,11 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: pkg-build-${{ github.run_id }}
+          path: dist
+
+      - name: Copy build artifacts to public
+        shell: bash
+        run: cp dist/*.js example/public
 
       - name: Build website
         shell: bash

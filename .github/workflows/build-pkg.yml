@@ -22,5 +22,4 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: pkg-build-${{ github.run_id }}
-          path: |
-            example/public
+          path: dist/*.js

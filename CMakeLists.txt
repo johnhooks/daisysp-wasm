@@ -47,7 +47,9 @@ add_definitions("--std=c++17")
 
 set_target_properties(AudioProcessor
     PROPERTIES
-    LINK_FLAGS "--bind\
+    LINK_FLAGS "\
+    --bind\
+    --pre-js=../lib/pre.js\
     -s SINGLE_FILE=1\
     -s WASM=1\
     -s NO_FILESYSTEM=1\
@@ -55,4 +57,4 @@ set_target_properties(AudioProcessor
     -s ASSERTIONS=0\
     -s EXPORT_ES6=1\
     -s MODULARIZE=1\
-    -O0 ")
+    -O0")

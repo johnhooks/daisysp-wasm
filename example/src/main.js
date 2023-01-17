@@ -21,8 +21,10 @@ class DemoApp {
 	}
 
 	async initializeAudio() {
+		console.log(import.meta.env);
+		const workletUrl = import.meta.env.BASE_URL + "wasm-worklet-processor.js";
 		this._context = new AudioContext({ sampleRate: 48_000 });
-		await this._context.audioWorklet.addModule("wasm-worklet-processor.js");
+		await this._context.audioWorklet.addModule(workletUrl);
 		this._audioNode = new AudioWorkletNode(this._context, "wasm-worklet-processor");
 		this._volumeNode = new GainNode(this._context, { gain: 0.25 });
 

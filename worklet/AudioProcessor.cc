@@ -56,6 +56,6 @@ void AudioProcessor::render(float *output, int32_t num_frames)
 
 void AudioProcessor::triggerAttackRelease(uint8_t note)
 {
-	// Trigger the envelope!
+	osc.SetFreq(mtof(note));
 	env.Trigger();
 }

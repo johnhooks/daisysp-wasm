@@ -12,5 +12,5 @@
 		"strict": true,
 		"types": ["audioworklet", "emscripten"]
 	},
-	"include": ["./src"]
+	"include": ["./src", "./build/wasm"]
 }

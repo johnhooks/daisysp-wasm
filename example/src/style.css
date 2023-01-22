@@ -1,8 +1,5 @@
 :root {
-	--dark-gray: #1b1b1b;
-	--light-gray: rgb(208, 208, 208);
 	--white: #f6f6f6;
-	--md-gray: rgb(77, 80, 87);
 	--dark-blue: #222630;
 
 	--gray-h: 222;
@@ -12,16 +9,21 @@
 	--gray: hsl(var(--gray-h), var(--gray-s), var(--gray-l));
 	--medium-gray: hsl(var(--gray-h), var(--gray-s), calc(var(--gray-l) + 25%));
 	--light-gray: hsl(var(--gray-h), var(--gray-s), calc(var(--gray-l) + 50%));
+	--dark-gray: hsl(var(--gray-h), var(--gray-s), calc(var(--gray-l) - 20%));
 
-	--voilet-h: 296;
-	--voilet-s: 67.1%;
-	--voilet-l: 72.5%;
-	--violet: hsl(var(--voilet-h), var(--voilet-s), var(--voilet-l));
-	--dark-violet: hsl(var(--voilet-h), var(--voilet-s), calc(var(--voilet-l) - 25%));
+	--green-h: 177;
+	--green-s: 50%;
+	--green-l: 60%;
+	--green: hsl(var(--green-h), var(--green-s), var(--green-l));
+	--dark-green: hsl(var(--green-h), var(--green-s), calc(var(--green-l) - 20%));
 
-	--bg-color: var(--dark-blue);
+	--bg-color: var(--dark-gray);
 	--fg-color: var(--light-gray);
 	--key-fill: var(--light-gray);
+
+	--secondary-fg-color: var(--gray);
+
+	--primary: var(--green);
 }
 
 body {
@@ -33,25 +35,51 @@ body {
 }
 
 header > h1 {
-	font-size: 1.5em;
-	font-weight: 400;
+	margin-top: 2rem;
+	margin-bottom: 1rem;
 	text-align: center;
-	margin-top: 4rem;
-	margin-bottom: 4rem;
+}
+
+#app {
+	position: relative;
+}
+
+#play-control > .icon {
+	width: 64px;
+	height: 64px;
+	stroke: var(--primary);
+	stroke-width: 1px;
+	margin-bottom: 1rem;
+
+	transition-property: transform, fill;
+	transition-duration: 250ms;
 }
 
 .container {
-	max-width: 720px;
-	margin: 0px auto;
+	margin: 0 auto;
 	padding-left: 1rem;
 	padding-right: 1rem;
 }
 
+.hidden {
+	display: none;
+}
+
+.sr-only {
+	position: absolute;
+	width: 1px;
+	height: 1px;
+	padding: 0;
+	margin: -1px;
+	overflow: hidden;
+	clip: rect(0, 0, 0, 0);
+	white-space: nowrap;
+	border-width: 0;
+}
+
 @media (min-width: 720px) {
 	header > h1 {
-		font-size: 2em;
-		margin-top: 6rem;
-		margin-top: 6rem;
+		margin-top: 4rem;
 	}
 
 	.container {
@@ -63,13 +91,21 @@ header > h1 {
 	:root {
 		--bg-color: var(--white);
 		--fg-color: var(--dark-gray);
-		--key-fill: var(light-gray);
+
+		--primary: var(--green);
+
+		--key-fill: var(--light-gray);
+		--secondary-fg-color: var(--light-gray);
 	}
 }
 @media (prefers-color-scheme: dark) {
 	:root {
 		--bg-color: var(--dark-gray);
 		--fg-color: var(--light-gray);
-		--key-fill: var(--md-gray);
+
+		--primary: var(--dark-green);
+
+		--key-fill: var(--gray);
+		--secondary-fg-color: var(--gray);
 	}
 }

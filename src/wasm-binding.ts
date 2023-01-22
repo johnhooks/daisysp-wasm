@@ -1,4 +1,4 @@
-import Module from "./AudioProcessor.js";
+import Module from "../build/wasm/audio-processor.js";
 
 import type { AudioProcessor, DspModule } from "./types.js";
 import { RENDER_QUANTUM_FRAMES, HeapAudioBuffer } from "./wasm-audio-helper.js";

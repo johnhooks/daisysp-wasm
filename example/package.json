@@ -10,5 +10,8 @@
 	"devDependencies": {
 		"vite": "4.0.4"
 	},
-	"type": "module"
+	"type": "module",
+	"dependencies": {
+		"midi-kbd": "1.1.1"
+	}
 }

@@ -1,12 +1,11 @@
 import nodeResolve from "@rollup/plugin-node-resolve";
 import typescript from "@rollup/plugin-typescript";
-
 import terser from "@rollup/plugin-terser";
 
 /**@type {import('rollup').InputPluginOption} */
 const plugins = [nodeResolve(), typescript()];
 
-if (process.env.NODE_ENV === "production") {
+if (process.env.CI) {
 	plugins.push(terser({ mangle: false }));
 }
 

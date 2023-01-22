@@ -16,6 +16,7 @@
 	"scripts": {
 		"build": "scripts/build.sh",
 		"build:rollup": "rollup -c && cp dist/wasm-worklet-processor.js example/public",
+		"watch": "scripts/watch.js",
 		"website:dev": "yarn --cwd example dev",
 		"website:build": "yarn --cwd example build",
 		"website:preview": "yarn --cwd example preview"

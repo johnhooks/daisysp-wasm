@@ -1,3 +1,5 @@
+#!/usr/bin/env sh
+
 # create the build directory if it doesn't exist
 mkdir -p build
 

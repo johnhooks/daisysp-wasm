@@ -8,11 +8,15 @@ on:
       - "**/*"
 
 jobs:
-  build:
+  build-wasm:
+    uses: ./.github/workflows/build-wasm.yml
+
+  build-pkg:
+    needs: build-wasm
     uses: ./.github/workflows/build-pkg.yml
 
-  website:
-    needs: build
+  build-website:
+    needs: build-pkg
     uses: ./.github/workflows/build-website.yml
     with:
       environment: development

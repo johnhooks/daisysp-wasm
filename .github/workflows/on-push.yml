@@ -14,10 +14,13 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  build:
+  build-wasm:
+    uses: ./.github/workflows/build-wasm.yml
+
+  build-pkg:
     uses: ./.github/workflows/build-pkg.yml
 
-  website:
+  build-website:
     needs: build
     uses: ./.github/workflows/build-website.yml
     with:
@@ -28,7 +31,7 @@ jobs:
     if: "contains(github.event.head_commit.message, '(website)')"
 
     # Add a dependency to the build job
-    needs: website
+    needs: build-website
 
     # Grant GITHUB_TOKEN the permissions required to make a Pages deployment
     permissions:

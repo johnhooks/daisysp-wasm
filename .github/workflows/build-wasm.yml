@@ -1,0 +1,23 @@
+name: Build wasm module
+
+on: workflow_call
+
+jobs:
+  build-wasm:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup Emscripten
+        uses: mymindstorm/setup-emsdk@v11
+
+      - name: Build package
+        shell: bash
+        run: yarn build:wasm
+
+      - name: Archive build artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: wasm-build-${{ github.run_id }}
+          path: build/wasm/

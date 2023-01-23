@@ -12,11 +12,15 @@ jobs:
       - name: Setup Node.js and Yarn
         uses: ./.github/actions/node
 
-      # Not currently attempting to build WASM modules on CI
+      - name: Download the build artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: wasm-build-${{ github.run_id }}
+          path: build/wasm
 
       - name: Build package
         shell: bash
-        run: yarn build:rollup
+        run: yarn build:js
 
       - name: Archive build artifact
         uses: actions/upload-artifact@v3

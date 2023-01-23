@@ -1,5 +1,8 @@
 #!/usr/bin/env sh
 
+# exit when any command fails
+set -e
+
 # create the build artifact directory if it doesn't exist
 mkdir -p dist
 

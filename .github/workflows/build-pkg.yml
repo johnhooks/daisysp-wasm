@@ -20,7 +20,7 @@ jobs:
 
       - name: Build package
         shell: bash
-        run: yarn build:rollup
+        run: yarn build:js
 
       - name: Archive build artifact
         uses: actions/upload-artifact@v3

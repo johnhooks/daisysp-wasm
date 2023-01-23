@@ -18,10 +18,11 @@ jobs:
     uses: ./.github/workflows/build-wasm.yml
 
   build-pkg:
+    needs: build-wasm
     uses: ./.github/workflows/build-pkg.yml
 
   build-website:
-    needs: build
+    needs: build-pkg
     uses: ./.github/workflows/build-website.yml
     with:
       environment: production

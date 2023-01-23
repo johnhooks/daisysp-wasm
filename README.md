@@ -10,23 +10,40 @@ Checkout a functional [example](https://johnhooks.io/daisysp-wasm) using `daisys
 
 ## Building the project
 
-1. Install [Emscripten](https://emscripten.org/docs/getting_started/downloads.html#installation-instructions-using-the-emsdk-recommended)
-2. Install [Node.js](https://nodejs.org/en/download/)
-3. Make sure both Emscripten and Node.js executables are in the shell `PATH`
+1. Install [Node.js](https://nodejs.org/en/download/)
+
+2. Install [Emscripten](https://emscripten.org/docs/getting_started/downloads.html#installation-instructions-using-the-emsdk-recommended)
+
+   **NOTE:** Emscripten packages a specific version of Node.js. If you `source ./emsdk_env.sh` like explained in the documents, it will add that version to the front of the shell `PATH`. There is a long [discussion](https://github.com/emscripten-core/emsdk/issues/1142) on why it does this, but if Node.js is already installed on your system, your should add `emsdk/upstream/emscripten` to your shell `PATH`, rather than source the script.
+
+3. Make sure Emscripten and Node.js executables are in the shell `PATH`
+
 4. Clone this repository
+
    ```sh
-   git clone https://github.com/johnhooks/daisysp-wasm-example.git
+   git clone https://github.com/johnhooks/daisysp-wasm.git
    ```
+
 5. Enter the directory, install dependencies and run the build script
+
    ```sh
-   cd daisysp-wasm-example
+   cd daisysp-wasm
    yarn install     # or npm install
    yarn build       # or npm run build
    ```
+
+   There is also a watch script that will rebuild the project when source files change.
+
+   ```sh
+   yarn watch       # or npm run watch
+   ```
+
 6. The project has an example website. To start the dev server
+
    ```sh
    yarn website:dev # or npm run website:dev
    ```
+
 7. Visit [localhost:5173](http://127.0.0.1:5173/) to checkout the example.
 
 ## About `scripts/build.sh`
@@ -36,8 +53,6 @@ The C++ source code for the audio processor is located in the `worklet` director
 A `Makefile` is generated in the `build` directory using `emcmake cmake -B ./build -S ./`.
 
 After entering the `build` directory, `make` is called and the WASM file is build in the `build/wasm` directory. The wasm file is inlined into the wrapping JavaScript code for ease of loading.
-
-The generated file is copied to the `src` directory.
 
 `rollup` bundles the audio worklet processor JavaScript code.
 
@@ -88,5 +103,3 @@ I am a total novice of both C++ and WASM, I have a lot to learn.
 - [emscripten.org](https://emscripten.org/index.html)
 - [Basic concepts behind Web Audio API](https://developer.mozilla.org/en-US/docs/Web/API/Web_Audio_API/Basic_concepts_behind_Web_Audio_API)
 - [AudioWorkletProcessor.process()](https://developer.mozilla.org/en-US/docs/Web/API/AudioWorkletProcessor/process)
-
-

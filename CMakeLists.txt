@@ -29,7 +29,10 @@ add_executable(audio-processor ${SOURCE_FILES})
 target_sources(audio-processor
     PRIVATE
     worklet/processor_bind.cc
-    worklet/AudioProcessor.cc
+    worklet/AudioProcessor.cc)
+
+target_include_directories(audio-processor
+    PUBLIC
     worklet/AudioProcessor.h)
 
 # `target_compile_definitions` adds some preprocessor definitions to our target. For new

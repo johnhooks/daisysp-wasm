@@ -16,7 +16,7 @@
 	"scripts": {
 		"build": "scripts/build.sh",
 		"build:js": "scripts/build-js.sh && cp dist/*.js example/public",
-		"build:wasm": ".scripts/build-wasm.sh",
+		"build:wasm": "scripts/build-wasm.sh",
 		"watch": "scripts/watch.js",
 		"website:dev": "yarn --cwd example dev",
 		"website:build": "yarn --cwd example build",

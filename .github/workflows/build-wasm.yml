@@ -12,9 +12,9 @@ jobs:
       - name: Setup Emscripten
         uses: mymindstorm/setup-emsdk@v11
 
-      - name: Build package
+      - name: Build wasm module
         shell: bash
-        run: yarn build:wasm
+        run: scripts/build-wasm.sh
 
       - name: Archive build artifact
         uses: actions/upload-artifact@v3
